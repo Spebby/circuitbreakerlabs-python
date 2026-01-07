@@ -80,6 +80,38 @@ async with client as client:
     )
 ```
 
+Want to test multi-turn conversations instead? Use the multi-turn endpoint (async version also available):
+
+```python
+import os
+
+from circuit_breaker_labs.api.evaluations import multi_turn_evaluate_system_prompt_post
+from circuit_breaker_labs.models import (
+    MultiTurnEvaluateSystemPromptRequest,
+    MultiTurnTestType,
+    TestCasePack,
+)
+
+with client as client:
+    request = MultiTurnEvaluateSystemPromptRequest(
+        threshold=0.6,
+        max_turns=6,
+        test_types=[
+            MultiTurnTestType.SEMANTIC_CHUNKS,
+            MultiTurnTestType.USER_PERSONA,
+        ],
+        system_prompt=os.getenv("SYSTEM_PROMPT"),
+        openrouter_model_name="anthropic/claude-3.7-sonnet",
+        test_case_packs=[TestCasePack.SUICIDAL_IDEATION],
+    )
+
+    run_tests_response = multi_turn_evaluate_system_prompt_post.sync(
+        client=client,
+        cbl_api_key=os.getenv("CBL_API_KEY"),
+        body=request,
+    )
+```
+
 Things to know:
 
 1. Every path/method combo becomes a Python module with four functions:
