@@ -89,7 +89,7 @@ from circuit_breaker_labs.api.evaluations import multi_turn_evaluate_system_prom
 from circuit_breaker_labs.models import (
     MultiTurnEvaluateSystemPromptRequest,
     MultiTurnTestType,
-    TestCasePack,
+    TestCaseGroup,
 )
 
 with client as client:
@@ -102,7 +102,7 @@ with client as client:
         ],
         system_prompt=os.getenv("SYSTEM_PROMPT"),
         openrouter_model_name="anthropic/claude-3.7-sonnet",
-        test_case_packs=[TestCasePack.SUICIDAL_IDEATION],
+        test_case_groups=[TestCaseGroup.SUICIDAL_IDEATION],
     )
 
     run_tests_response = multi_turn_evaluate_system_prompt_post.sync(
