@@ -5,6 +5,7 @@ description = "A client library for accessing Circuit Breaker Labs API"
 authors = []
 requires-python = ">=3.10"
 readme = "README.md"
+license = "MIT"
 dependencies = [
     "httpx>=0.23.0,<0.29.0",
     "attrs>=22.2.0",
