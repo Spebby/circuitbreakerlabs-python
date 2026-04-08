@@ -22,6 +22,41 @@ uv pip install circuit-breaker-labs
 
 Or install using a wheel/sdist distributed with [each release](https://github.com/circuitbreakerlabs/circuitbreakerlabs-python/releases).
 
+## Nix flake usage
+
+Minimal flake using this package as an input:
+
+```nix
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+    cbl-lib.url = "github:circuitbreakerlabs/circuitbreakerlabs-python";
+  };
+
+  outputs = { nixpkgs, flake-utils, cbl-lib, ... }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          overlays = [ cbl-lib.overlays.${system}.default ];
+        };
+      in {
+        devShells.default = pkgs.mkShell {
+          packages = [
+            (pkgs.python314.withPackages (ps: [ ps.cblLib ]))
+          ];
+        };
+      });
+}
+```
+
+Quick check:
+
+```sh
+nix develop --command python -c "from circuit_breaker_labs import Client; client = Client(base_url='https://api.circuitbreakerlabs.ai/v1/'); print(type(client).__name__)"
+```
+
 ## Usage
 
 First, create a client:
